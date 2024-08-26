@@ -1,4 +1,6 @@
+const pool = require('../db');
 
 exports.getAllUsers = async (req, res) => {
-  res.send('Hello World!');
+  const posts = await pool.query("SELECT * FROM users;");
+  res.send(posts.rows);
 };
