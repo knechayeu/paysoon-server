@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "driver": "pg",
+    "user": "postgres",
+    "password": {"ENV": "DBPASSWORD"},
+    "host": "autorack.proxy.rlwy.net",
+    "database": "railway",
+    "port": "47654"
+  }
+}

@@ -1,50 +1,17 @@
-const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
+const TelegramBot = require('node-telegram-bot-api');
 const TOKEN = process.env.token || '';
+const { createUser } = require('../services/user');
 
 if (TOKEN?.length) {
   const bot = new TelegramBot(TOKEN, { polling: true });
 
   bot.on('message', async (msg) => {
+    const { id, first_name, last_name, username } = msg.from;
+    console.log(msg);
     console.log(await bot.getChat(188981082), 1)
-    console.log(msg)
-    const chatId = msg.chat.id;
-    const text = msg.text;
+    await createUser({ id, first_name, last_name, username })
 
-    if (text === '/start') {
-      // await bot.sendMessage(chatId, 'Ниже появится кнопка', {
-      //     reply_markup: {
-      //         keyboard: [
-      //             [
-      //                 {
-      //                     text: 'Заполни форму'
-      //                 }
-      //             ]
-      //         ]
-      //     }
-      // })
-
-      await bot.sendMessage(chatId, 'Zahodi', {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: 'Заполни форму111',
-                web_app: {
-                  url: 'https://www.google.co.jp/'
-                }
-              }
-            ]
-          ]
-        }
-      })
-      // bot.sendMessage(chatId, 'Recieved new message');
-    }
-
-  })
-
-  bot.on('chat_member', async (chat_member) => {
-    console.log(chat_member.chat());
+    console.log('я покакал');
   });
-
 }
