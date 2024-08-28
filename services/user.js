@@ -14,7 +14,7 @@ async function createUser({ id, first_name, last_name, username }) {
 
 async function getUserById(id) {
   const query = {
-    text: `SELECT FROM public.user WHERE id=$1`,
+    text: `SELECT * FROM public.user WHERE id=$1`,
     values: [id],
   };
   const user = await pool.query(query);
@@ -22,4 +22,14 @@ async function getUserById(id) {
   return user.rows;
 };
 
-module.exports = { createUser, getUserById };
+async function getUserByUsername(username) {
+  const query = {
+    text: `SELECT * FROM public.user WHERE username=$1`,
+    values: [username],
+  };
+  const user = await pool.query(query);
+
+  return user.rows;
+};
+
+module.exports = { createUser, getUserById, getUserByUsername };
