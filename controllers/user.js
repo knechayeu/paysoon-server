@@ -1,18 +1,15 @@
 const { pool } = require('../config');
+const { getUserById } = require('../services/user');
 
 exports.getAllUsers = async (req, res) => {
-  const posts = await pool.query("SELECT * FROM user");
+  const posts = await pool.query("SELECT * FROM users");
   res.send(posts.rows);
 };
 
 exports.getUser = async (req, res) => {
-  const query = {
-    text: `SELECT * FROM public.user WHERE id=$1`,
-    values: [req.query.id]
-  };
-  const posts = await pool.query(query);
+  const user = await getUserById(req.query.id);
 
-  res.send(posts.rows?.[0] || null);
+  res.send(user);
 };
 
 exports.createUser = async (req, res) => {
