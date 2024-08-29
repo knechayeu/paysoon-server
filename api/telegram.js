@@ -23,4 +23,6 @@ if (TOKEN?.length) {
 
     // console.log('я покакал');
   });
+
+  module.exports = { bot };
 }
