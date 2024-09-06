@@ -1,5 +1,17 @@
 const { pool } = require('../config');
 
+async function createRoom(data) {
+  const { id, title, owner_id } = data;
+
+  const query = {
+    text: `INSERT INTO rooms (id, title, owner_id) VALUES ($1, $2, $3) RETURNING *`,
+    values: [id, title, owner_id],
+  };
+
+  const result = await pool.query(query);
+  return result.rows?.[0] || null; // Return the created room
+}
+
 async function getAllRooms() {
   const query = {
     text: 'SELECT * FROM rooms',
@@ -10,7 +22,7 @@ async function getAllRooms() {
 
 async function getRoom(id) {
   const query = {
-    text: `SELECT rooms.id, rooms.title, users.first_name, rooms.created_user_id FROM rooms INNER JOIN users on rooms.created_user_id = users.id WHERE rooms.id=$1 `,
+    text: `SELECT rooms.id, rooms.title, users.first_name, rooms.owner_id FROM rooms INNER JOIN users on rooms.owner_id = users.id WHERE rooms.id=$1 `,
     values: [id],
   };
 
@@ -21,10 +33,10 @@ async function getRoom(id) {
       id: rows[0].id,
       title: rows[0].title,
       user: {
-        id: rows[0].created_user_id,
+        id: rows[0].owner_id,
         firstName: rows[0].first_name,
       }
-    }
+    };
   }
 
   return null;
@@ -33,4 +45,5 @@ async function getRoom(id) {
 module.exports = {
   getAllRooms,
   getRoom,
+  createRoom,
 };
