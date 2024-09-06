@@ -11,6 +11,7 @@ app.use(cors());
 
 // Routes setup
 app.use('', routes.user);
+app.use('', routes.room);
 
 // Start server
 const PORT = config.port || 3000;

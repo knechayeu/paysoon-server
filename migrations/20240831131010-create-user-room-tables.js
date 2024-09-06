@@ -24,9 +24,17 @@ exports.up = function (db, callback) {
     // Create rooms table
     db.createTable('rooms', {
       id: { type: 'int4', primaryKey: true, autoIncrement: true },
-      title: { type: 'string', notNull: true }
+      title: { type: 'string', notNull: true },
+      created_user_id: { type: 'int4', notNull: true },
     }, (err) => {
       if (err) return callback(err);
+
+      db.addForeignKey('rooms', 'users', 'fk_user', {
+        created_user_id: 'id'
+      }, {
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      }, callback);
 
       // Create user_rooms table
       db.createTable('user_rooms', {

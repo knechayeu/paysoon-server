@@ -1,15 +1,20 @@
-const { pool } = require("../config");
+const { pool } = require('../config');
 
-async function createUser(id, first_name, last_name, username, avatar_url = null) {
+async function createUser(data) {
+  const { id, first_name, last_name, username, avatar_url } = data;
   const user = await getUserById(id);
 
   if (!user) {
     const query = {
       text: `INSERT INTO users (id, first_name, last_name, username, avatar_url) VALUES ($1, $2, $3, $4, $5)`,
-      values: [id, first_name, last_name, username, avatar_url]
+      values: [id, first_name, last_name, username, avatar_url],
     };
-    await pool.query(query);
+    const user = await pool.query(query);
+
+    return user.rows?.[0] || null;
   }
+
+  return user;
 }
 
 async function getUserById(id) {
@@ -20,7 +25,7 @@ async function getUserById(id) {
   const user = await pool.query(query);
 
   return user.rows?.[0] || null;
-};
+}
 
 async function getUserByUsername(username) {
   const query = {
@@ -30,7 +35,7 @@ async function getUserByUsername(username) {
   const user = await pool.query(query);
 
   return user.rows?.[0] || null;
-};
+}
 
 async function createRoom(id, title) {
   const query = {
@@ -48,4 +53,10 @@ async function createUserRoom(user_id, room_id) {
   await pool.query(query);
 }
 
-module.exports = { createUser, getUserById, getUserByUsername, createRoom, createUserRoom };
+module.exports = {
+  createUser,
+  getUserById,
+  getUserByUsername,
+  createRoom,
+  createUserRoom,
+};
