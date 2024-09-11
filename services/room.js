@@ -1,5 +1,17 @@
 const { pool } = require('../config');
 
+async function createRoom(data) {
+  const { id, title, owner_id } = data;
+
+  const query = {
+    text: `INSERT INTO rooms (id, title, owner_id) VALUES ($1, $2, $3) RETURNING *`,
+    values: [id, title, owner_id],
+  };
+
+  const result = await pool.query(query);
+  return result.rows?.[0] || null; // Return the created room
+}
+
 async function getAllRooms() {
   const query = {
     text: 'SELECT * FROM rooms',
