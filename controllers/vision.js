@@ -27,7 +27,18 @@ exports.analyzeImage = async (req, res) => {
       ],
     });
 
-    res.send(chatResponse.choices[0].message.content);
+    // Получаем текстовый контент
+    const content = chatResponse.choices[0].message.content;
+    
+    // Удаляем маркеры markdown для JSON и лишние пробелы
+    const cleanedContent = content.replace(/```json\n|\n```/g, '').trim();
+    
+    // Парсим JSON в JavaScript массив объектов
+    const items = JSON.parse(cleanedContent);
+
+    console.log(items)
+
+    res.send(items);
   } catch (error) {
     console.error('Error analyzing image:', error);
     res.status(500).send({ error: 'An error occurred while analyzing the image' });
