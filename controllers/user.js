@@ -10,8 +10,11 @@ exports.getAllUsers = async (req, res) => {
 exports.getUser = async (req, res) => {
   const user = await getUserById(req.query.id);
 
-  res.sendStatus()
+  // res.sendStatus()
 
+  if (!user) {
+    res.send({ data: 'Не найден' });
+  }
   res.send(user);
 };
 
