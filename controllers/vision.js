@@ -21,7 +21,7 @@ exports.analyzeImage = async (req, res) => {
           role: "user",
           content: [
             { type: "text", text: "Определи позиции и их стоимости и выдай только результат в виде массива c ключами name, price. Без пояснений" },
-            { type: "image_url", imageUrl: imageUrl },
+            { type: "image_url", imageUrl: base64Image },
           ],
         },
       ],
