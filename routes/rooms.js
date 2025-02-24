@@ -1,23 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const roomController = require('../controllers/room');
+const { checkUserId } = require('../middleware/auth');
 
-router.get('/rooms', roomController.getAllRooms);
-router.get('/room/:id', roomController.getRoom);
-router.post(
-  '/create-room',
-  (req, res, next) => {
-    console.log(req.headers, 111)
-    if (req.headers.id?.length) {
-      req.body.ownerId = req.headers.id;
-      return next();
-    }   
-
-    return res.sendStatus(401);
-  },
-  roomController.createRoom
-);
-// router.get('/user', customerController.getUser);
-// router.post('/create-user', customerController.createUser);
+router.get('/rooms', checkUserId, roomController.getAllRooms);
+router.get('/room/:id', checkUserId, roomController.getRoom);
+router.post('/create-room', checkUserId, roomController.createRoom);
 
 module.exports = router;

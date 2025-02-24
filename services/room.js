@@ -9,7 +9,7 @@ async function createRoom(data) {
   };
 
   const result = await pool.query(query);
-  return result.rows?.[0] || null; // Return the created room
+  return result.rows?.[0] || null;
 }
 
 async function getAllRooms() {
@@ -63,8 +63,36 @@ async function createRoom(data) {
   }
 }
 
+async function addUserToRoom(data) {
+  const { roomId, userId } = data;
+
+  console.log(data, 111)
+
+  if (userId.length === 0 || roomId.length === 0) {
+    return null;
+  }
+
+  const checkQuery = {
+    text: `SELECT * FROM user_rooms WHERE room_id = $1 AND user_id = $2`,
+    values: [roomId, userId],
+  };
+
+  const existingRecord = await pool.query(checkQuery);
+  if (existingRecord.rows.length > 0) {
+    return null;
+  }
+
+  const insertQuery = {
+    text: `INSERT INTO user_rooms (room_id, user_id) VALUES ($1, $2)`,  
+    values: [roomId, userId],
+  };
+
+  return pool.query(insertQuery);
+}
+
 module.exports = {
   getAllRooms,
   getRoom,
   createRoom,
+  addUserToRoom,
 };

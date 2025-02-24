@@ -1,4 +1,4 @@
-const { getAllRooms, getRoom, createRoom } = require('../services/room');
+const { getAllRooms, getRoom, createRoom, addUserToRoom } = require('../services/room');
 
 exports.getAllRooms = async (req, res) => {
   const posts = await getAllRooms();
@@ -8,6 +8,7 @@ exports.getAllRooms = async (req, res) => {
 
 exports.getRoom = async (req, res) => {
   const room = await getRoom(req.params.id);
+  await addUserToRoom({ roomId: room.id, userId: req.body.userId });
 
   if (room) {
     return res.send(room)
@@ -17,12 +18,14 @@ exports.getRoom = async (req, res) => {
 };
 
 exports.createRoom = async (req, res) => {
-  const room = await createRoom(req.body);
-  console.log(room, 1)
+  try {
+    const room = await createRoom(req.body);
+    await addUserToRoom({ roomId: room.id, userId: req.body.userId });
 
-  if (room) {
     return res.send(room)
-  }
+  } catch (error) {
+    console.log(error);
 
-  return res.sendStatus(307);
+    return res.sendStatus(307);
+  }
 };
